@@ -35,7 +35,7 @@ function SidebarItem({
 }) {
   return (
     <box
-      onMouse={() => onClick()}
+      onMouseDown={() => onClick()}
       style={{
         paddingX: 1,
         paddingY: 0,
