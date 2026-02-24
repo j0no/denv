@@ -3,6 +3,9 @@ import { createRoot, useKeyboard } from "@opentui/react"
 import { readFileSync, readdirSync } from "fs"
 import { useState } from "react"
 
+import { SidebarItem } from "./SidebarItem"
+import { ContentPanel } from "./ContentPanel"
+
 interface EnvFile {
     name: string
     path: string
@@ -22,35 +25,6 @@ function getEnvFiles(): EnvFile[] {
             const content = readFileSync(path, "utf-8")
             return { name, path, content }
         })
-}
-
-function SidebarItem({
-    name,
-    isSelected,
-    onClick,
-}: {
-    name: string
-    isSelected: boolean
-    onClick: () => void
-}) {
-    return (
-        <box
-            onMouseDown={() => onClick()}
-            style={{
-                paddingX: 1,
-                paddingY: 0,
-                backgroundColor: isSelected ? "blue" : undefined,
-            }}
-        >
-            <text
-                attributes={isSelected ? TextAttributes.BOLD : undefined}
-                fg={isSelected ? "white" : "white"}
-            >
-                {isSelected ? "▶ " : "  "}
-                {name}
-            </text>
-        </box>
-    )
 }
 
 function App() {
@@ -101,32 +75,10 @@ function App() {
                         />
                     )}
                 </box>
-                <box width="100%" flexGrow={1} flexDirection="column">
-                    <text attributes={TextAttributes.BOLD} fg="cyan">
-                        {isSystemEnv ? "System Environment Variables" : selectedFile?.path}
-                    </text>
-                    <box>
-                        <scrollbox
-                            width="100%"
-                            height="100%"
-                            style={{ marginTop: 1 }}
-                            flexGrow={1}
-                            scrollbarOptions={{
-                                showArrows: true,
-                            }}
-                        >
-                            {content.length === 0 ? (
-                                <text fg="gray">No content</text>
-                            ) : (
-                                content.map((line: string, idx: number) => (
-                                    <text key={idx} fg="white">
-                                        {line}
-                                    </text>
-                                ))
-                            )}
-                        </scrollbox>
-                    </box>
-                </box>
+                <ContentPanel
+                    title={isSystemEnv ? "System Environment Variables" : selectedFile?.path || ""}
+                    content={content}
+                />
             </box>
         </box>
     )
